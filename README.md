@@ -1,10 +1,16 @@
 # benchmark_atomic_performance
 
+golang atomic performance
+
+### performance
+
+cmd
+
 ```
 go test --bench=.
 ```
 
-performance
+stdout
 
 ```
 goos: darwin
@@ -18,4 +24,11 @@ BenchmarkAtomicCas-4           	200000000	         7.34 ns/op
 BenchmarkNormalCas-4           	2000000000	         0.66 ns/op
 BenchmarkAtomicParallel-4      	100000000	        15.0 ns/op
 BenchmarkAtomicAddParallel-4   	100000000	        16.0 ns/op
+```
+
+conclusion
+
+```
+not parallel atomic ≈ 7.5ns
+parallel atomic ≈ 15ns
 ```

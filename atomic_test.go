@@ -1,6 +1,7 @@
 package main
 
 import (
+	"runtime"
 	"sync/atomic"
 	"testing"
 )
@@ -54,8 +55,18 @@ func BenchmarkAtomicParallel(b *testing.B) {
 	})
 }
 
-func BenchmarkAtomicAddParallel(b *testing.B) {
+func BenchmarkAtomicAddParallel100(b *testing.B) {
 	b.SetParallelism(100)
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			atomic.AddInt64(&a, 1)
+		}
+	})
+}
+
+func BenchmarkAtomicAddParallel500(b *testing.B) {
+	runtime.GOMAXPROCS(2 * runtime.NumCPU())
+	b.SetParallelism(500)
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			atomic.AddInt64(&a, 1)
