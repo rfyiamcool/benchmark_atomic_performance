@@ -46,11 +46,31 @@ func BenchmarkNormalCas(b *testing.B) {
 	}
 }
 
-func BenchmarkAtomicParallel(b *testing.B) {
+func BenchmarkAtomicStoreParallel100(b *testing.B) {
 	b.SetParallelism(100)
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			atomic.StoreInt64(&a, int64(0))
+		}
+	})
+}
+
+func BenchmarkAtomicCasShareParallel100(b *testing.B) {
+	b.SetParallelism(100)
+	var bb int64 = 0
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			atomic.CompareAndSwapInt64(&bb, bb, bb+1)
+		}
+	})
+}
+
+func BenchmarkAtomicCasParallel100(b *testing.B) {
+	b.SetParallelism(100)
+	b.RunParallel(func(pb *testing.PB) {
+		var bb int64 = 0
+		for pb.Next() {
+			atomic.CompareAndSwapInt64(&bb, bb, bb+1)
 		}
 	})
 }
